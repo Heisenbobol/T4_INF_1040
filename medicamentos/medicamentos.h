@@ -14,15 +14,9 @@ typedef struct {
 
 Medicamento consulta_medicamento(int id_medicamento);
 
-int cadastra_medicamento(int id_medicamento,
-                         char *nome,
-                         float valor,
-                         bool receita);
+int cadastra_medicamento(int id_medicamento, char *nome, float valor, bool receita);
 
-int altera_medicamento(int id_medicamento,
-                       char *novoNome,
-                       float novoValor,
-                       bool novaReceita);
+int altera_medicamento(int id_medicamento, char *novoNome, float novoValor, bool novaReceita);
 
 int deleta_medicamento(int id_medicamento);
 

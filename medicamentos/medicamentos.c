@@ -72,10 +72,7 @@ Medicamento consulta_medicamento(int id_medicamento)
     return vazio;
 }
 
-int cadastra_medicamento(int id_medicamento,
-                         char *nome,
-                         float valor,
-                         bool receita)
+int cadastra_medicamento(int id_medicamento,  char *nome, float valor,  bool receita)
 {
     if(id_medicamento <= 0 ||
        nome == NULL ||
@@ -106,10 +103,7 @@ int cadastra_medicamento(int id_medicamento,
     return 0;
 }
 
-int altera_medicamento(int id_medicamento,
-                       char *novoNome,
-                       float novoValor,
-                       bool novaReceita)
+int altera_medicamento(int id_medicamento,  char *novoNome, float novoValor, bool novaReceita)
 {
     if(id_medicamento <= 0)
         return 2;

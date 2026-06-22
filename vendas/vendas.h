@@ -3,6 +3,9 @@
 
 #include <time.h>
 #include <stdio.h>
+#include "../clientes/clientes.h"
+#include "../estoque/estoque.h"
+#include "../medicamentos/medicamentos.h"
 
 #define MAX_ITENS_CARRINHO 100
 #define MAX_ITENS_VENDA 100
@@ -25,6 +28,7 @@
 typedef struct
 {
     int id_medicamento;
+    char nome[100];
     int quantidade;
 
 } ItemCarrinho;
@@ -48,7 +52,7 @@ typedef struct
 {
     int id_venda;
 
-    int cpf_cliente;
+    long long cpf_cliente;
 
     time_t data;
 
@@ -66,7 +70,6 @@ typedef struct
     int qtd_vendas;
 } BancoVendas;
 
-
 /* Interface pública */
 
 //Gera um relatório de vendas dos últimos X dias
@@ -79,6 +82,13 @@ typedef struct
 //- 4: Erro de leitura/escrita no arquivo
 int gera_relatorio(int periodo);
 
+//Imprime o historico de compras de um cliente
+//---
+//Parametros:
+//- Historico: Array com todas as compras desse cliente
+//- qtd_vendas: Quantidade de compras do cliente
+void imprime_historico(Venda historico[], int qtd_vendas);
+
 //Registra uma venda utilizando os itens presentes no carrinho
 //---
 //Parametros:
@@ -87,7 +97,7 @@ int gera_relatorio(int periodo);
 //Retornos:
 //- 0: Tudo Ok
 //- 2: CPF inválido
-int registra_venda(int cpf_cliente);
+int registra_venda(long long cpf_cliente);
 
 //Adiciona uma quantidade de medicamentos ao carrinho
 //---
@@ -134,7 +144,7 @@ int consulta_carrinho(Cart* carrinho);
 //- 0: Tudo Ok
 //- 2: CPF inválido
 //- 7: Cliente não possui histórico de compras
-int consulta_historico(int cpf_cliente, Venda historico[], int *qtd_vendas);
+int consulta_historico(long long cpf_cliente, Venda historico[], int *qtd_vendas);
 
 /* Persistência */
 

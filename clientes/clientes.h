@@ -16,7 +16,7 @@ void listarClientes();
 int buscarCliente(char *cpf);
 int alterarCliente(char *cpf, char *novoNome, char *novoTelefone);
 int excluirCliente(char *cpf);
-void salvarCliente(Cliente cliente);
+void salvarClientes();
 int validarCPF(char *cpf);
 void carregarClientes();
 

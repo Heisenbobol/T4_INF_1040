@@ -1,9 +1,14 @@
+#include <string.h>
 #include "vendas.h"
+#include "../clientes/clientes.h"
+#include "../estoque/estoque.h"
+#include "../medicamentos/medicamentos.h"
 
 static BancoVendas banco_vendas;
 static Cart carrinho_atual;
 
 /*MOCKINGs*/
+/*
 int consulta_medicamento(int id){
     if (id == 1){
         return 1;
@@ -29,7 +34,7 @@ int consulta_estoque(int id, int* quantidade){
     }
     return 1;
 }
-
+*/
 
 void popular_dados_teste(void)
 {
@@ -64,11 +69,14 @@ int consulta_carrinho(Cart *resultado)
 int adiciona_carrinho(int id_medicamento, int quantidade)
 {
     int i;
+    Medicamento med;
 
     if(id_medicamento <= 0 || quantidade <= 0)
         return ERRO_PARAMETRO_INVALIDO;
 
-    if(!consulta_medicamento(id_medicamento))
+    med = consulta_medicamento(id_medicamento);
+
+    if(med.id == -1)
         return ERRO_NAO_CADASTRADO;
 
     for(i = 0; i < carrinho_atual.qtd_itens; i++)
@@ -84,6 +92,7 @@ int adiciona_carrinho(int id_medicamento, int quantidade)
         return ERRO_PARAMETRO_INVALIDO;
 
     carrinho_atual.itens[carrinho_atual.qtd_itens].id_medicamento = id_medicamento;
+    strcpy(carrinho_atual.itens[carrinho_atual.qtd_itens].nome, med.nome);
     carrinho_atual.itens[carrinho_atual.qtd_itens].quantidade = quantidade;
 
     carrinho_atual.qtd_itens++;
@@ -95,11 +104,14 @@ int remove_carrinho(int id_medicamento)
 {
     int i;
     int j;
+    Medicamento med;
 
     if(id_medicamento <= 0)
         return ERRO_PARAMETRO_INVALIDO;
 
-    if(!consulta_medicamento(id_medicamento))
+    med = consulta_medicamento(id_medicamento);
+
+    if(med.id == -1)
         return ERRO_NAO_CADASTRADO;
 
     for(i = 0; i < carrinho_atual.qtd_itens; i++)
@@ -120,13 +132,15 @@ int remove_carrinho(int id_medicamento)
     return ERRO_NAO_ENCONTRADO;
 }
 
-int registra_venda(int cpf_cliente)
+int registra_venda(long long cpf_cliente)
 {
     Venda venda;
     int i;
 
     /* valida cpf */
-    if(consulta_cliente(cpf_cliente) != SUCESSO)
+    char cpf[12];
+    snprintf(cpf, sizeof(cpf), "%lld", cpf_cliente);
+    if(buscarCliente(cpf) != SUCESSO)
         return ERRO_PARAMETRO_INVALIDO;
 
     /* carrinho vazio */
@@ -213,7 +227,52 @@ int gera_relatorio(int periodo)
     return SUCESSO;
 }
 
-int consulta_historico(int cpf_cliente, Venda historico[], int *qtd_vendas)
+void imprime_historico(Venda historico[], int qtd_vendas)
+{
+    int i;
+    int j;
+
+    if(qtd_vendas == 0)
+    {
+        printf("Nenhuma venda encontrada.\n");
+        return;
+    }
+
+    printf("\n========== HISTORICO DE COMPRAS ==========\n");
+
+    for(i = 0; i < qtd_vendas; i++)
+    {
+        printf("\nVenda #%d\n",
+               historico[i].id_venda);
+
+        printf("CPF: %lld\n",
+               historico[i].cpf_cliente);
+
+        printf("Data: %s",
+               ctime(&historico[i].data));
+
+        printf("Valor Total: R$ %.2f\n",
+               historico[i].valor_total);
+
+        printf("Itens:\n");
+
+        for(j = 0; j < historico[i].qtd_itens; j++)
+        {
+            printf("  Medicamento: %d",
+                   historico[i].itens[j].id_medicamento);
+
+            printf(" | Qtd: %d",
+                   historico[i].itens[j].quantidade);
+
+            printf(" | Valor Unit.: R$ %.2f\n",
+                   historico[i].itens[j].valor_unitario);
+        }
+
+        printf("------------------------------------------\n");
+    }
+}
+
+int consulta_historico(long long cpf_cliente, Venda historico[], int *qtd_vendas)
 {
     int i;
     int encontradas = 0;
@@ -222,7 +281,9 @@ int consulta_historico(int cpf_cliente, Venda historico[], int *qtd_vendas)
         return ERRO_PARAMETRO_INVALIDO;
     }
 
-    if(consulta_cliente(cpf_cliente) != SUCESSO){
+    char cpf[12];
+    snprintf(cpf, sizeof(cpf), "%lld", cpf_cliente);
+    if(buscarCliente(cpf) != SUCESSO){
         return ERRO_PARAMETRO_INVALIDO;
     }
 
