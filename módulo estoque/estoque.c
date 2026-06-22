@@ -97,10 +97,18 @@ int consulta_estoque(int idMedicamento, int *quantidade)
 int adiciona_estoque(int idMedicamento, int quantidade)
 {
     int pos;
+    Medicamento med;
 
-    if(idMedicamento <= 0)
+    if(idMedicamento <= 0 || quantidade <= 0)
     {
         return -2;
+    }
+
+    med = consulta_medicamento(idMedicamento);
+
+    if(med.id == -1)
+    {
+        return -1;
     }
 
     pos = buscarPosicao(idMedicamento);
