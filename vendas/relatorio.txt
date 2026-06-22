@@ -1,0 +1,4 @@
+RELATORIO DOS ULTIMOS 30 DIAS
+
+Quantidade de vendas: 13
+Faturamento total: R$ 599.25
