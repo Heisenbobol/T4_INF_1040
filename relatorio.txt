@@ -1,4 +1,4 @@
-RELATORIO DOS ULTIMOS 5 DIAS
+RELATORIO DOS ULTIMOS 1 DIAS
 
-Quantidade de vendas: 2
-Faturamento total: R$ 542.35
+Quantidade de vendas: 3
+Faturamento total: R$ 548.25
